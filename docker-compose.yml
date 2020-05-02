@@ -1,8 +1,25 @@
 version: "3.7"
 services:
   web:
-    build: .
+    build:
+      context: .
+      target: web
     command: cargo run
+    ports: 
+      - "8080:8080"
+    env_file: .env
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    volumes:
+      - .:/usr/web/app/
+
+  migrate-up:
+    build:
+      context: .
+      target: migration
+    command: diesel migration run
     ports: 
       - "8080:8080"
     env_file: .env
