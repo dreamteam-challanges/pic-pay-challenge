@@ -1,4 +1,5 @@
 use actix_web::{App, HttpServer};
+use dotenv::dotenv;
 
 mod config;
 mod controllers;
@@ -9,6 +10,8 @@ use config::{Clients, routes};
 
 #[actix_rt::main]
 async fn main() -> Result<(), std::io::Error>  {
+    dotenv().ok();
+    
     HttpServer::new(|| {
         App::new()
             .data(Clients::new())

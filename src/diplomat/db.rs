@@ -1,6 +1,9 @@
 use actix::{Actor, Addr, SyncArbiter, SyncContext};
-use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::{
+    pg::PgConnection,
+    r2d2::{ConnectionManager, Pool},
+    result::QueryResult,
+};
 use std::env;
 
 pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
@@ -20,4 +23,12 @@ impl DbExecutor {
 
         SyncArbiter::start(4, move || DbExecutor(pool.clone()))
     }
+}
+
+pub fn insert_new_user(user: User, conn: &PgConnection) -> Result<(), DbError> {
+    use crate::schema::users::dsl::*;
+
+    let new_user = diesel::insert_into(auth_user).values(&user).execute(conn);
+
+    new_user
 }
