@@ -1,9 +1,15 @@
+#[macro_use]
+extern crate diesel;
+
 use actix_web::{App, HttpServer};
 use dotenv::dotenv;
 
+mod adapter;
 mod config;
 mod controllers;
 mod schemata;
+mod schema;
+mod modelata;
 mod diplomat;
 
 use config::{Clients, routes};

@@ -1,13 +1,11 @@
 use crate::controllers::users;
-use actix::prelude::Addr;
 use crate::diplomat::db::DbExecutor;
+use actix::prelude::Addr;
 
 use actix_web::web;
 
 pub fn routes(config: &mut web::ServiceConfig) {
-    config.service(
-        users::create
-    );
+    config.service(users::create);
 }
 
 #[derive(Clone)]

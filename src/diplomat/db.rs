@@ -1,10 +1,12 @@
 use actix::{Actor, Addr, SyncArbiter, SyncContext};
 use diesel::{
+    prelude::*,
     pg::PgConnection,
     r2d2::{ConnectionManager, Pool},
     result::QueryResult,
 };
 use std::env;
+use crate::modelata::User;
 
 pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
 
@@ -25,10 +27,10 @@ impl DbExecutor {
     }
 }
 
-pub fn insert_new_user(user: User, conn: &PgConnection) -> Result<(), DbError> {
+pub fn insert_new_user(user: User, conn: &PgConnection) -> QueryResult<uuid::Uuid> {
     use crate::schema::users::dsl::*;
 
-    let new_user = diesel::insert_into(auth_user).values(&user).execute(conn);
+    diesel::insert_into(users).values(&user).execute(conn)?;
 
-    new_user
+    Ok(user.id)
 }
